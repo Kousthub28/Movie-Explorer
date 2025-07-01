@@ -1,24 +1,31 @@
-import logo from './logo.svg';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import Home from './pages/Home';
+import MyList from './pages/MyList';
+import MovieDetails from './pages/MovieDetails';
+import PlayView from './pages/PlayView';
+import BottomNav from './components/BottomNav';
+import { MovieListProvider } from './context/MovieListContext';
+import ProfileSelection from './pages/ProfileSelection';
 import './App.css';
 
 function App() {
+  const profileSelected = localStorage.getItem('profile');
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <MovieListProvider>
+      <Router>
+        <div className="app-container">
+          <Routes>
+            <Route path="/" element={profileSelected ? <Navigate to="/home" /> : <ProfileSelection />} />
+            <Route path="/home" element={<Home />} />
+            <Route path="/my-list" element={<MyList />} />
+            <Route path="/movie/:id" element={<MovieDetails />} />
+            <Route path="/play/:id" element={<PlayView />} />
+          </Routes>
+          {profileSelected && <BottomNav />}
+        </div>
+      </Router>
+    </MovieListProvider>
   );
 }
 
